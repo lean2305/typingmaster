@@ -1,5 +1,5 @@
 {/* Full Dashboard.tsx content with the fix */}
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -41,8 +41,11 @@ interface Achievement {
 
 interface RecentActivity {
   type: string;
-  description: string;
+  description?: string;
   timestamp: string;
+  // For translation
+  translationKey?: string;
+  translationParams?: Record<string, any>;
 }
 
 export function Dashboard() {
@@ -113,6 +116,7 @@ export function Dashboard() {
 }
 
 function DashboardHome() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [stats, setStats] = useState<UserStats | null>(null);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
@@ -132,6 +136,11 @@ function DashboardHome() {
   }, [user]);
 
   const fetchUserData = async () => {
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -139,7 +148,7 @@ function DashboardHome() {
       const { data: statsData, error: statsError } = await supabase
         .from('user_stats')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .single();
 
       if (statsError && statsError.code !== 'PGRST116') {
@@ -147,19 +156,20 @@ function DashboardHome() {
       }
 
       if (statsData) {
+        const data = statsData as any;
         setStats({
-          level: statsData.level || 1,
-          exp: statsData.exp || 0,
-          words_typed: statsData.words_typed || 0,
-          time_spent: statsData.time_spent || 0,
-          wpm: statsData.wpm || 0,
-          accuracy: statsData.accuracy || 0,
+          level: Number(data.level) || 1,
+          exp: Number(data.exp) || 0,
+          words_typed: Number(data.words_typed) || 0,
+          time_spent: Number(data.time_spent) || 0,
+          wpm: Number(data.wpm) || 0,
+          accuracy: Number(data.accuracy) || 0,
         });
 
         // Generate typing history data
         const history = [];
         const today = new Date();
-        const baseWpm = statsData.wpm || 25;
+        const baseWpm = Number(data.wpm) || 25;
 
         // Generate data for the last 7 days with realistic progression
         for (let i = 6; i >= 0; i--) {
@@ -217,7 +227,7 @@ function DashboardHome() {
         await supabase
           .from('user_achievements')
           .select('achievement_id, unlocked_at')
-          .eq('user_id', user?.id);
+          .eq('user_id', user.id);
 
       if (userAchievementsError) {
         console.error(
@@ -229,58 +239,66 @@ function DashboardHome() {
       // Combine the data
       if (allAchievements) {
         const unlockedIds = new Set(
-          (userAchievements || []).map((a) => a.achievement_id)
+          (userAchievements || []).map((a) => String(a.achievement_id))
         );
 
-        const formattedAchievements = allAchievements.map((achievement) => ({
-          id: achievement.id,
-          name: achievement.name,
-          description: achievement.description,
-          icon: achievement.icon,
-          unlocked: unlockedIds.has(achievement.id),
-        }));
+        const formattedAchievements = allAchievements.map((achievement) => {
+          const ach = achievement as any;
+          return {
+            id: String(ach.id),
+            name: String(ach.name),
+            description: String(ach.description),
+            icon: String(ach.icon),
+            unlocked: unlockedIds.has(String(ach.id)),
+          };
+        });
 
         setAchievements(formattedAchievements);
 
         // Generate recent activity based on unlocked achievements
         const recentUnlocked = (userAchievements || [])
-          .sort(
-            (a, b) =>
-              new Date(b.unlocked_at).getTime() -
-              new Date(a.unlocked_at).getTime()
-          )
+          .sort((a, b) => {
+            const aTime = new Date(String(b.unlocked_at)).getTime();
+            const bTime = new Date(String(a.unlocked_at)).getTime();
+            return aTime - bTime;
+          })
           .slice(0, 3);
 
         const recentActivities: RecentActivity[] = [];
 
         for (const ua of recentUnlocked) {
           const achievement = allAchievements.find(
-            (a) => a.id === ua.achievement_id
+            (a) => String(a.id) === String(ua.achievement_id)
           );
           if (achievement) {
+            const ach = achievement as any;
             recentActivities.push({
               type: 'achievement',
-              description: `Unlocked achievement: ${achievement.name}`,
-              timestamp: ua.unlocked_at,
+              translationKey: 'dashboard.unlockedAchievement',
+              translationParams: { name: String(ach.name) },
+              timestamp: String(ua.unlocked_at),
             });
           }
         }
 
         // Add typing session activities if we don't have enough achievements
         if (recentActivities.length < 3 && statsData) {
-          if (statsData.words_typed > 0) {
+          const data = statsData as any;
+          if (Number(data.words_typed) > 0) {
             recentActivities.push({
               type: 'typing',
-              description: `Typed ${statsData.words_typed} words total`,
-              timestamp: statsData.updated_at,
+              translationKey: 'dashboard.typedWordsTotal',
+              translationParams: { count: Number(data.words_typed) },
+              timestamp: String(data.updated_at),
             });
           }
 
-          if (statsData.level > 1) {
+          if (Number(data.level) > 1) {
             recentActivities.push({
               type: 'level',
-              description: `Reached level ${statsData.level}`,
-              timestamp: statsData.updated_at,
+              translationKey: 'dashboard.reachedLevel',
+              translationParams: { level: Number(data.level) },
+              timestamp: String(data.updated_at),
             });
           }
         }
@@ -289,7 +307,7 @@ function DashboardHome() {
         if (recentActivities.length === 0) {
           recentActivities.push({
             type: 'join',
-            description: 'Started using TypingMaster',
+            translationKey: 'dashboard.startedUsing',
             timestamp: new Date().toISOString(),
           });
         }
@@ -306,7 +324,15 @@ function DashboardHome() {
       if (leaderboardError) {
         console.error('Error fetching leaderboard:', leaderboardError);
       } else {
-        setTopPlayers(leaderboardData || []);
+        const formattedLeaderboard = (leaderboardData || []).map((player) => {
+          const p = player as any;
+          return {
+            username: String(p.username),
+            level: Number(p.level),
+            words_typed: Number(p.words_typed),
+          };
+        });
+        setTopPlayers(formattedLeaderboard);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -365,13 +391,14 @@ function DashboardHome() {
       className="space-y-8"
     >
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+        {/* ...existing header content... */}
         <Link
           to="/play"
           className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
         >
           <Keyboard className="w-5 h-5 mr-2" />
-          Start Typing
+          {t('common.play')}
         </Link>
       </div>
 
@@ -390,12 +417,12 @@ function DashboardHome() {
           className="bg-white p-6 rounded-xl shadow-md"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">Quick Stats</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t('dashboard.quickStats')}</h2>
             <BarChart2 className="w-5 h-5 text-indigo-500" />
           </div>
           <div className="space-y-3">
             <div>
-              <p className="text-sm text-gray-500">Level Progress</p>
+              <p className="text-sm text-gray-500">{t('dashboard.levelProgress')}</p>
               <div className="flex justify-between text-xs text-gray-500 mb-1">
                 <span>{stats?.exp || 0} XP</span>
                 <span>{(stats?.level || 1) * 100} XP</span>
@@ -413,20 +440,20 @@ function DashboardHome() {
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Words Typed</p>
+              <p className="text-sm text-gray-500">{t('dashboard.wordsTyped')}</p>
               <p className="text-lg font-semibold text-gray-800">
                 {stats?.words_typed || 0}
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-500">WPM</p>
+                <p className="text-sm text-gray-500">{t('dashboard.wpm')}</p>
                 <p className="text-lg font-semibold text-gray-800">
                   {stats?.wpm || 0}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Accuracy</p>
+                <p className="text-sm text-gray-500">{t('dashboard.accuracy')}</p>
                 <p className="text-lg font-semibold text-gray-800">
                   {stats?.accuracy || 0}%
                 </p>
@@ -443,7 +470,7 @@ function DashboardHome() {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              Recent Activity
+              {t('dashboard.recentActivity')}
             </h2>
             <Clock className="w-5 h-5 text-indigo-500" />
           </div>
@@ -454,17 +481,19 @@ function DashboardHome() {
                   <span className="text-xs text-gray-400 mr-2">
                     {getRelativeTime(activity.timestamp)}
                   </span>
-                  {activity.description}
+                  {activity.translationKey
+                    ? String(t(activity.translationKey, activity.translationParams || {}))
+                    : activity.description}
                 </li>
               ))
             ) : (
-              <li className="text-sm text-gray-500">No recent activity</li>
+              <li className="text-sm text-gray-500">{t('dashboard.noRecentActivity')}</li>
             )}
           </ul>
           <div className="mt-4 pt-4 border-t border-gray-100">
-            <p className="text-sm text-gray-500">Time Spent Typing</p>
+            <p className="text-sm text-gray-500">{t('dashboard.timeSpentTyping')}</p>
             <p className="text-lg font-semibold text-gray-800">
-              {Math.floor((stats?.time_spent || 0) / 60)} minutes
+              {t('dashboard.minutes', { count: Math.floor((stats?.time_spent || 0) / 60) })}
             </p>
           </div>
         </motion.div>
@@ -528,7 +557,7 @@ function DashboardHome() {
           className="bg-white p-6 rounded-xl shadow-md"
         >
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Typing Speed Progress
+            {t('dashboard.typingSpeedProgress')}
           </h2>
           <div className="h-48 flex items-end space-x-2">
             {typingProgress.map((day, index) => (
@@ -562,7 +591,7 @@ function DashboardHome() {
           className="bg-white p-6 rounded-xl shadow-md"
         >
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Top Leaderboard
+            {t('dashboard.topLeaderboard')}
           </h2>
           {topPlayers.length > 0 ? (
             <ul className="space-y-3">
@@ -578,10 +607,10 @@ function DashboardHome() {
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-medium text-indigo-600">
-                      Level {player.level}
+                      {t('dashboard.level', { level: player.level })}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {player.words_typed} words
+                      {t('dashboard.words', { count: player.words_typed })}
                     </div>
                   </div>
                 </li>
@@ -590,10 +619,10 @@ function DashboardHome() {
           ) : (
             <div className="text-center py-4">
               <p className="text-sm text-gray-500">
-                No players on the leaderboard yet
+                {t('dashboard.noPlayers')}
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                Be the first to make your mark!
+                {t('dashboard.beFirst')}
               </p>
             </div>
           )}
@@ -601,7 +630,7 @@ function DashboardHome() {
             to="/dashboard/leaderboard"
             className="mt-4 text-sm text-indigo-600 hover:text-indigo-800 inline-block"
           >
-            View full leaderboard →
+            {t('dashboard.viewFullLeaderboard')}
           </Link>
         </motion.div>
       </div>

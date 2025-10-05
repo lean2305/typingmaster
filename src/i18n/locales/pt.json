@@ -40,6 +40,74 @@
     "joinCommunity": {
       "title": "Junte-se à Nossa Comunidade em Crescimento",
       "subtitle": "Conecte-se com milhares de entusiastas da digitação"
+    },
+    "whyChoose": {
+      "title": "Por Que Escolher o TypingMaster?",
+      "boostSpeed": {
+        "title": "Aumente Sua Velocidade",
+        "description": "Aumente sua velocidade de digitação com exercícios direcionados"
+      },
+      "trackProgress": {
+        "title": "Acompanhe Seu Progresso",
+        "description": "Monitore sua melhoria ao longo do tempo"
+      },
+      "earnAchievements": {
+        "title": "Ganhe Conquistas",
+        "description": "Desbloqueie emblemas conforme alcança novos marcos"
+      }
+    },
+    "advancedFeatures": {
+      "title": "Recursos Avançados"
+    },
+    "featuresShowcase": {
+      "powerfulTitle": "Recursos Poderosos",
+      "description": "Nossa plataforma foi projetada para ajudar você a melhorar suas habilidades de digitação através de exercícios envolventes e análises abrangentes.",
+      "list": [
+        "Sessões de prática personalizadas",
+        "Detecção de erros em tempo real",
+        "Acompanhamento de progresso e análises",
+        "Classificações globais e competições",
+        "Sistema de conquistas para motivação"
+      ]
+    },
+    "benefits": [
+      {
+        "title": "Melhora de Velocidade",
+        "description": "Aumente sua velocidade de digitação em até 50% em apenas 2 semanas de prática regular"
+      },
+      {
+        "title": "Treino de Precisão",
+        "description": "Reduza erros e desenvolva memória muscular para digitação precisa"
+      },
+      {
+        "title": "Certificação de Habilidade",
+        "description": "Ganhe certificados para demonstrar sua proficiência em digitação a empregadores"
+      }
+    ],
+    "testimonials": [
+      {
+        "quote": "O TypingMaster me ajudou a aumentar minha velocidade de digitação de 40 para 80 PPM em apenas duas semanas!",
+        "author": "Sarah J.",
+        "role": "Redatora"
+      },
+      {
+        "quote": "Os elementos de gamificação tornam a prática de digitação realmente divertida. Aguardo minhas sessões diárias.",
+        "author": "Michael T.",
+        "role": "Desenvolvedor de Software"
+      },
+      {
+        "quote": "Como professora, recomendo o TypingMaster a todos os meus alunos. É a ferramenta de digitação mais eficaz que encontrei.",
+        "author": "Rebecca L.",
+        "role": "Professora do Ensino Médio"
+      }
+    ],
+    "cta": {
+      "title": "Pronto para começar a digitar?",
+      "subtitle": "Crie sua conta agora e junte-se à nossa comunidade de digitadores dedicados!",
+      "button": "Começar"
+    },
+    "footer": {
+      "improveSkills": "Melhore suas habilidades de digitação hoje!"
     }
   },
   "auth": {
@@ -81,19 +149,75 @@
     "achievement": {
       "unlocked": "Conquista Desbloqueada!"
     }
+    ,
+    "wordsList": ["o","a","de","e","um","para","com","em","que","ter","é","por","não","no","com","ele","como","você","fazer","em"],
+    "sentences": [
+      "A raposa marrom rápida pula sobre o cão preguiçoso.",
+      "Nem tudo que reluz é ouro.",
+      "A prática leva à perfeição.",
+      "Dois erros não fazem um acerto."
+    ],
+    "paragraphs": [
+      "O sol estava se pondo atrás das montanhas, lançando longas sombras pelo vale. Uma brisa suave agitava as folhas das árvores, criando uma melodia suave.",
+      "A velha livraria na esquina era um tesouro de histórias esquecidas. Prateleiras empoeiradas enfeitavam as paredes, cheias de volumes de todos os tamanhos e cores."
+    ]
   },
   "profile": {
     "title": "Perfil",
     "subtitle": "Gerencie sua conta e veja seu progresso",
     "overview": "Visão Geral",
     "achievements": "Conquistas",
-    "history": "Histórico",
-    "settings": "Configurações",
+    "historyTab": "Histórico",
+    "settingsTab": "Configurações",
+    "errors": {
+      "load": "Falha ao carregar dados do perfil. Por favor, tente novamente.",
+      "updateUsername": "Falha ao atualizar nome de usuário. Por favor, tente novamente.",
+      "updateLeaderboard": "Falha ao atualizar configurações da classificação. Por favor, tente novamente.",
+      "deleteAccount": "Falha ao excluir conta. Por favor, tente novamente."
+    },
     "stats": {
       "level": "Nível",
       "wordsTyped": "Palavras Digitadas",
       "averageWPM": "PPM Médio",
       "accuracy": "Precisão"
+    },
+    "experience": {
+      "title": "Progresso de Experiência",
+      "needed": "XP necessário para próximo nível"
+    },
+    "recentAchievements": "Conquistas Recentes",
+    "history": {
+      "unlocked": "Desbloqueado",
+      "date": "Data",
+      "wpm": "PPM",
+      "accuracy": "Precisão",
+      "duration": "Duração",
+      "minutes": "min"
+    },
+    "settings": {
+      "account": {
+        "title": "Configurações da Conta",
+        "profileInfo": "Informações do Perfil",
+        "username": "Nome de Usuário",
+        "saving": "Salvando...",
+        "save": "Salvar",
+        "email": "Email",
+        "emailImmutable": "O email não pode ser alterado"
+      },
+      "privacy": {
+        "title": "Privacidade e Segurança",
+        "showOnLeaderboard": "Mostrar meu perfil na classificação",
+        "showOnLeaderboardDesc": "Permitir que outros usuários vejam suas estatísticas de digitação"
+      },
+      "danger": {
+        "title": "Zona de Perigo",
+        "deleteAccount": "Excluir Conta",
+        "deleteAccountDesc": "Excluir permanentemente sua conta e todos os dados associados",
+        "deleteConfirm": "Tem certeza? Esta ação não pode ser desfeita.",
+        "deleting": "Excluindo...",
+        "yesDelete": "Sim, Excluir Minha Conta",
+        "cancel": "Cancelar"
+      }
     }
   },
   "leaderboard": {
@@ -108,5 +232,28 @@
       "en": "Inglês",
       "pt": "Português"
     }
+  },
+  "dashboard": {
+    "unlockedAchievement": "Conquista desbloqueada: {{name}}",
+    "startedUsing": "Começou a usar o TypingMaster",
+    "title": "Painel",
+    "quickStats": "Estatísticas Rápidas",
+    "levelProgress": "Progresso de Nível",
+    "wordsTyped": "Palavras Digitadas",
+    "wpm": "PPM",
+    "accuracy": "Precisão",
+    "recentActivity": "Atividade Recente",
+    "noRecentActivity": "Sem atividade recente",
+    "timeSpentTyping": "Tempo Gasto Digitando",
+    "typingSpeedProgress": "Progresso de Velocidade de Digitação",
+    "topLeaderboard": "Top Classificação",
+    "level": "Nível {{level}}",
+    "words": "{{count}} palavras",
+    "noPlayers": "Nenhum jogador na classificação ainda",
+    "beFirst": "Seja o primeiro a deixar sua marca!",
+    "viewFullLeaderboard": "Ver classificação completa →",
+    "minutes": "{{count}} minutos",
+    "typedWordsTotal": "Digitou um total de {{count}} palavras",
+    "reachedLevel": "Alcançou o nível {{level}}"
   }
 }

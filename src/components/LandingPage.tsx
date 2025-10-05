@@ -37,40 +37,18 @@ export function LandingPage() {
     }
   ];
 
-  const testimonials = [
-    {
-      quote: "TypingMaster helped me increase my typing speed from 40 to 80 WPM in just two weeks!",
-      author: "Sarah J.",
-      role: "Content Writer"
-    },
-    {
-      quote: "The gamification elements make practicing typing actually fun. I look forward to my daily sessions.",
-      author: "Michael T.",
-      role: "Software Developer"
-    },
-    {
-      quote: "As a teacher, I recommend TypingMaster to all my students. It's the most effective typing tool I've found.",
-      author: "Rebecca L.",
-      role: "High School Teacher"
-    }
-  ];
+  // Load arrays from translations when available (returnObjects allows arrays/objects)
+  const testimonials = (t('landing.testimonials', { returnObjects: true }) as Array<any>) || [];
 
-  const benefits = [
-    {
-      icon: <Zap className="w-6 h-6 text-white" />,
-      title: "Speed Improvement",
-      description: "Increase your typing speed by up to 50% in just 2 weeks of regular practice"
-    },
-    {
-      icon: <CheckCircle className="w-6 h-6 text-white" />,
-      title: "Accuracy Training",
-      description: "Reduce errors and develop muscle memory for precise typing"
-    },
-    {
-      icon: <Trophy className="w-6 h-6 text-white" />,
-      title: "Skill Certification",
-      description: "Earn certificates to showcase your typing proficiency to employers"
-    }
+  const benefitsFromLocale = (t('landing.benefits', { returnObjects: true }) as Array<any>) || [];
+  const benefits = benefitsFromLocale.length > 0 ? benefitsFromLocale.map((b: any) => ({
+    icon: b.icon ? b.icon : <Zap className="w-6 h-6 text-white" />,
+    title: b.title,
+    description: b.description
+  })) : [
+    { icon: <Zap className="w-6 h-6 text-white" />, title: 'Speed Improvement', description: 'Increase your typing speed by up to 50% in just 2 weeks of regular practice' },
+    { icon: <CheckCircle className="w-6 h-6 text-white" />, title: 'Accuracy Training', description: 'Reduce errors and develop muscle memory for precise typing' },
+    { icon: <Trophy className="w-6 h-6 text-white" />, title: 'Skill Certification', description: 'Earn certificates to showcase your typing proficiency to employers' }
   ];
 
   return (
@@ -153,7 +131,7 @@ export function LandingPage() {
         >
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-xl overflow-hidden">
             <div className="p-8 text-white">
-              <h2 className="text-3xl font-bold mb-8 text-center">Why Choose TypingMaster?</h2>
+              <h2 className="text-3xl font-bold mb-8 text-center">{t('landing.whyChoose.title')}</h2>
               <div className="grid md:grid-cols-3 gap-8">
                 {benefits.map((benefit, index) => (
                   <div key={index} className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
@@ -178,35 +156,35 @@ export function LandingPage() {
         >
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Powerful Features
+              {t('landing.featuresShowcase.powerfulTitle')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our platform is designed to help you improve your typing skills through engaging exercises and comprehensive analytics.
+              {t('landing.featuresShowcase.description')}
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-md">
               <Zap className="w-12 h-12 text-indigo-500 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Boost Your Speed</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('landing.whyChoose.boostSpeed.title')}</h3>
               <p className="text-gray-600">
-                Our specialized exercises are designed to increase your typing speed progressively. Watch your WPM soar!
+                {t('landing.whyChoose.boostSpeed.description')}
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md">
               <BarChart2 className="w-12 h-12 text-indigo-500 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Track Your Progress</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('landing.whyChoose.trackProgress.title')}</h3>
               <p className="text-gray-600">
-                Detailed analytics help you understand your strengths and weaknesses, allowing for targeted improvement.
+                {t('landing.whyChoose.trackProgress.description')}
               </p>
             </div>
             
             <div className="bg-white p-6 rounded-xl shadow-md">
               <Award className="w-12 h-12 text-indigo-500 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Earn Achievements</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('landing.whyChoose.earnAchievements.title')}</h3>
               <p className="text-gray-600">
-                Stay motivated with our achievement system. Unlock badges as you reach new milestones in your typing journey.
+                {t('landing.whyChoose.earnAchievements.description')}
               </p>
             </div>
           </div>
@@ -220,7 +198,7 @@ export function LandingPage() {
           className="mt-24 bg-white rounded-2xl shadow-xl p-8"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            What Our Users Say
+            {t('landing.testimonialsTitle', 'What Our Users Say')}
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -229,10 +207,10 @@ export function LandingPage() {
                 <div className="absolute -top-3 -left-3">
                   <Star className="w-6 h-6 text-yellow-400 fill-current" />
                 </div>
-                <p className="text-gray-600 italic mb-4">"{testimonial.quote}"</p>
+                <p className="text-gray-600 italic mb-4">"{t(`landing.testimonials.${index}.quote`, { defaultValue: testimonial.quote })}"</p>
                 <div>
-                  <p className="font-semibold text-gray-900">{testimonial.author}</p>
-                  <p className="text-sm text-gray-500">{testimonial.role}</p>
+                  <p className="font-semibold text-gray-900">{t(`landing.testimonials.${index}.author`, { defaultValue: testimonial.author })}</p>
+                  <p className="text-sm text-gray-500">{t(`landing.testimonials.${index}.role`, { defaultValue: testimonial.role })}</p>
                 </div>
               </div>
             ))}
@@ -250,42 +228,20 @@ export function LandingPage() {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="p-8 text-white">
                 <Sparkles className="w-10 h-10 mb-4" />
-                <h2 className="text-3xl font-bold mb-4">Advanced Features</h2>
+                <h2 className="text-3xl font-bold mb-4">{t('landing.advancedFeatures.title')}</h2>
                 <p className="text-indigo-100 mb-6">
                   TypingMaster offers a comprehensive set of features designed to help you become a typing expert.
                 </p>
                 
                 <ul className="space-y-3">
-                  <li className="flex items-center">
-                    <div className="bg-white/20 p-1 rounded-full mr-3">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <span>Personalized practice sessions</span>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-white/20 p-1 rounded-full mr-3">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <span>Real-time error detection</span>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-white/20 p-1 rounded-full mr-3">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <span>Progress tracking and analytics</span>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-white/20 p-1 rounded-full mr-3">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <span>Global leaderboards and competitions</span>
-                  </li>
-                  <li className="flex items-center">
-                    <div className="bg-white/20 p-1 rounded-full mr-3">
-                      <Target className="w-4 h-4" />
-                    </div>
-                    <span>Achievement system for motivation</span>
-                  </li>
+                  {(t('landing.featuresShowcase.list', { returnObjects: true }) as string[]).map((item, idx) => (
+                    <li key={idx} className="flex items-center">
+                      <div className="bg-white/20 p-1 rounded-full mr-3">
+                        <Target className="w-4 h-4" />
+                      </div>
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
               
@@ -309,16 +265,16 @@ export function LandingPage() {
           className="mt-24 text-center"
         >
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Ready to Start Typing?
+            {t('landing.cta.title')}
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Create your account now and join our community of dedicated typists!
+            {t('landing.cta.subtitle')}
           </p>
           <button
             onClick={() => document.querySelector('input')?.focus()}
             className="inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg"
           >
-            Get Started <ArrowRight className="ml-2 w-5 h-5" />
+            {t('landing.cta.button')} <ArrowRight className="ml-2 w-5 h-5" />
           </button>
         </motion.div>
 
@@ -339,7 +295,7 @@ export function LandingPage() {
             <Users className="w-5 h-5" />
           </div>
           <p>© {new Date().getFullYear()} TypingMaster. All rights reserved.</p>
-          <p className="mt-2">Improve your typing skills today!</p>
+          <p className="mt-2">{t('landing.footer.improveSkills')}</p>
         </footer>
       </div>
     </div>

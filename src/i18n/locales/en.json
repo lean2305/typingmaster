@@ -40,6 +40,74 @@
     "joinCommunity": {
       "title": "Join Our Growing Community",
       "subtitle": "Connect with thousands of typing enthusiasts"
+    },
+    "whyChoose": {
+      "title": "Why Choose TypingMaster?",
+      "boostSpeed": {
+        "title": "Boost Your Speed",
+        "description": "Increase your typing speed with targeted exercises"
+      },
+      "trackProgress": {
+        "title": "Track Your Progress",
+        "description": "Monitor your improvement over time"
+      },
+      "earnAchievements": {
+        "title": "Earn Achievements",
+        "description": "Unlock badges as you reach new milestones"
+      }
+    },
+    "advancedFeatures": {
+      "title": "Advanced Features"
+    },
+    "featuresShowcase": {
+      "powerfulTitle": "Powerful Features",
+      "description": "Our platform is designed to help you improve your typing skills through engaging exercises and comprehensive analytics.",
+      "list": [
+        "Personalized practice sessions",
+        "Real-time error detection",
+        "Progress tracking and analytics",
+        "Global leaderboards and competitions",
+        "Achievement system for motivation"
+      ]
+    },
+    "benefits": [
+      {
+        "title": "Speed Improvement",
+        "description": "Increase your typing speed by up to 50% in just 2 weeks of regular practice"
+      },
+      {
+        "title": "Accuracy Training",
+        "description": "Reduce errors and develop muscle memory for precise typing"
+      },
+      {
+        "title": "Skill Certification",
+        "description": "Earn certificates to showcase your typing proficiency to employers"
+      }
+    ],
+    "testimonials": [
+      {
+        "quote": "TypingMaster helped me increase my typing speed from 40 to 80 WPM in just two weeks!",
+        "author": "Sarah J.",
+        "role": "Content Writer"
+      },
+      {
+        "quote": "The gamification elements make practicing typing actually fun. I look forward to my daily sessions.",
+        "author": "Michael T.",
+        "role": "Software Developer"
+      },
+      {
+        "quote": "As a teacher, I recommend TypingMaster to all my students. It's the most effective typing tool I've found.",
+        "author": "Rebecca L.",
+        "role": "High School Teacher"
+      }
+    ],
+    "cta": {
+      "title": "Ready to Start Typing?",
+      "subtitle": "Create your account now and join our community of dedicated typists!",
+      "button": "Get Started"
+    },
+    "footer": {
+      "improveSkills": "Improve your typing skills today!"
     }
   },
   "auth": {
@@ -81,19 +149,75 @@
     "achievement": {
       "unlocked": "Achievement Unlocked!"
     }
+    ,
+    "wordsList": ["the","be","to","of","and","a","in","that","have","I","it","for","not","on","with","he","as","you","do","at"],
+    "sentences": [
+      "The quick brown fox jumps over the lazy dog.",
+      "All that glitters is not gold.",
+      "Practice makes perfect.",
+      "Two wrongs don't make a right."
+    ],
+    "paragraphs": [
+      "The sun was setting behind the mountains, casting long shadows across the valley. A gentle breeze rustled the leaves of the trees, creating a soothing melody.",
+      "The old bookstore on the corner was a treasure trove of forgotten stories. Dusty shelves lined the walls, filled with volumes of all sizes and colors."
+    ]
   },
   "profile": {
     "title": "Profile",
     "subtitle": "Manage your account and view your progress",
     "overview": "Overview",
     "achievements": "Achievements",
-    "history": "History",
-    "settings": "Settings",
+    "historyTab": "History",
+    "settingsTab": "Settings",
+    "errors": {
+      "load": "Failed to load profile data. Please try again later.",
+      "updateUsername": "Failed to update username. Please try again.",
+      "updateLeaderboard": "Failed to update leaderboard settings. Please try again.",
+      "deleteAccount": "Failed to delete account. Please try again."
+    },
     "stats": {
       "level": "Level",
       "wordsTyped": "Words Typed",
       "averageWPM": "Average WPM",
       "accuracy": "Accuracy"
+    },
+    "experience": {
+      "title": "Experience Progress",
+      "needed": "XP needed for next level"
+    },
+    "recentAchievements": "Recent Achievements",
+    "history": {
+      "unlocked": "Unlocked",
+      "date": "Date",
+      "wpm": "WPM",
+      "accuracy": "Accuracy",
+      "duration": "Duration",
+      "minutes": "min"
+    },
+    "settings": {
+      "account": {
+        "title": "Account Settings",
+        "profileInfo": "Profile Information",
+        "username": "Username",
+        "saving": "Saving...",
+        "save": "Save",
+        "email": "Email",
+        "emailImmutable": "Email cannot be changed"
+      },
+      "privacy": {
+        "title": "Privacy & Security",
+        "showOnLeaderboard": "Show my profile on leaderboards",
+        "showOnLeaderboardDesc": "Allow other users to see your typing stats"
+      },
+      "danger": {
+        "title": "Danger Zone",
+        "deleteAccount": "Delete Account",
+        "deleteAccountDesc": "Permanently delete your account and all associated data",
+        "deleteConfirm": "Are you sure? This action cannot be undone.",
+        "deleting": "Deleting...",
+        "yesDelete": "Yes, Delete My Account",
+        "cancel": "Cancel"
+      }
     }
   },
   "leaderboard": {
@@ -108,5 +232,28 @@
       "en": "English",
       "pt": "Portuguese"
     }
+  },
+  "dashboard": {
+  "unlockedAchievement": "Unlocked achievement: {{name}}",
+  "startedUsing": "Started using TypingMaster",
+  "title": "Dashboard",
+  "quickStats": "Quick Stats",
+  "levelProgress": "Level Progress",
+  "wordsTyped": "Words Typed",
+  "wpm": "WPM",
+  "accuracy": "Accuracy",
+  "recentActivity": "Recent Activity",
+  "noRecentActivity": "No recent activity",
+  "timeSpentTyping": "Time Spent Typing",
+  "typingSpeedProgress": "Typing Speed Progress",
+  "topLeaderboard": "Top Leaderboard",
+  "level": "Level {{level}}",
+  "words": "{{count}} words",
+  "noPlayers": "No players on the leaderboard yet",
+  "beFirst": "Be the first to make your mark!",
+  "viewFullLeaderboard": "View full leaderboard →",
+  "minutes": "{{count}} minutes",
+  "typedWordsTotal": "Typed {{count}} words total",
+  "reachedLevel": "Reached level {{level}}"
   }
 }

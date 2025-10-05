@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Shield, Trophy, Award, History, ChevronRight } from 'lucide-react';
+import { Settings, Shield, Award } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 interface UserProfile {
   username: string;
@@ -33,6 +34,7 @@ interface TypingSession {
 }
 
 export function Profile() {
+  const { t } = useTranslation();
   const { signOut, user } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'achievements' | 'history' | 'settings'>('overview');
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -53,9 +55,15 @@ export function Profile() {
     if (user) {
       fetchUserData();
     }
-  }, [user]);
+  }, [user, t]);
 
   const fetchUserData = async () => {
+    if (!user?.id) {
+      setError('User not authenticated');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
@@ -64,7 +72,7 @@ export function Profile() {
       const { data: profileData, error: profileError } = await supabase
         .from('user_profiles')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .maybeSingle();
 
       if (profileError) throw profileError;
@@ -73,7 +81,7 @@ export function Profile() {
       const { data: statsData, error: statsError } = await supabase
         .from('user_stats')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .maybeSingle();
 
       if (statsError && statsError.code !== 'PGRST116') throw statsError;
@@ -83,7 +91,7 @@ export function Profile() {
         const { data: newStats, error: createError } = await supabase
           .from('user_stats')
           .insert({
-            user_id: user?.id,
+            user_id: user.id,
             level: 1,
             exp: 0,
             words_typed: 0,
@@ -95,9 +103,9 @@ export function Profile() {
           .single();
 
         if (createError) throw createError;
-        setStats(newStats);
+        setStats(newStats as unknown as UserStats);
       } else {
-        setStats(statsData);
+        setStats(statsData as unknown as UserStats);
       }
 
       // Fetch user achievements
@@ -113,33 +121,47 @@ export function Profile() {
             icon
           )
         `)
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .order('unlocked_at', { ascending: false });
 
       if (achievementsError) throw achievementsError;
 
-      // Set state
-      setProfile(profileData || { username: '', show_on_leaderboard: true });
-      setNewUsername(profileData?.username || '');
-      setShowLeaderboard(profileData?.show_on_leaderboard ?? true);
+      // Set profile state with type validation
+      if (profileData && typeof profileData.username === 'string' && typeof profileData.show_on_leaderboard === 'boolean') {
+        setProfile(profileData as unknown as UserProfile);
+        setNewUsername(profileData.username);
+        setShowLeaderboard(profileData.show_on_leaderboard);
+      } else {
+        setProfile({ username: '', show_on_leaderboard: true });
+        setNewUsername('');
+        setShowLeaderboard(true);
+      }
       
-      // Format achievements
-      const formattedAchievements = achievementsData?.map(a => ({
-        id: a.achievements.id,
-        name: a.achievements.name,
-        description: a.achievements.description,
-        icon: a.achievements.icon,
-        unlocked_at: a.unlocked_at
-      })) || [];
+      // Format achievements with type validation
+      const formattedAchievements = (achievementsData || [])
+        .filter(a => {
+          const ach = a.achievements;
+          return ach && typeof ach === 'object' && 'id' in ach && 'name' in ach;
+        })
+        .map(a => {
+          const ach = a.achievements as any;
+          return {
+            id: String(ach.id),
+            name: String(ach.name),
+            description: String(ach.description),
+            icon: String(ach.icon),
+            unlocked_at: String(a.unlocked_at)
+          };
+        });
       setAchievements(formattedAchievements);
 
       // Generate some sample typing sessions (in a real app, this would come from a sessions table)
-      const sampleSessions = generateSampleSessions(statsData || null);
+      const sampleSessions = generateSampleSessions(statsData as UserStats | null);
       setRecentSessions(sampleSessions);
 
     } catch (err: any) {
       console.error('Error fetching user data:', err);
-      setError(err.message || 'Failed to load profile data. Please try again later.');
+      setError(err.message || t('profile.errors.load'));
     } finally {
       setLoading(false);
     }
@@ -183,7 +205,7 @@ export function Profile() {
       setProfile(prev => prev ? { ...prev, username: newUsername.trim() } : null);
     } catch (err) {
       console.error('Error updating username:', err);
-      setError('Failed to update username. Please try again.');
+      setError(t('profile.errors.updateUsername'));
     } finally {
       setSavingUsername(false);
     }
@@ -206,7 +228,7 @@ export function Profile() {
       setProfile(prev => prev ? { ...prev, show_on_leaderboard: newValue } : null);
     } catch (err) {
       console.error('Error updating leaderboard visibility:', err);
-      setError('Failed to update leaderboard settings. Please try again.');
+      setError(t('profile.errors.updateLeaderboard'));
     }
   };
 
@@ -217,7 +239,6 @@ export function Profile() {
       setDeleting(true);
       setError('');
       
-      // Delete user data from tables (RLS policies will ensure we can only delete our own data)
       const { error: deleteAchievementsError } = await supabase
         .from('user_achievements')
         .delete()
@@ -239,22 +260,21 @@ export function Profile() {
       
       if (deleteProfileError) throw deleteProfileError;
       
-      // Delete the user's auth account (this will only work for the current user)
-      const { error: deleteUserError } = await supabase.auth.admin.deleteUser(
-        user.id
-      );
-      
-      if (deleteUserError) {
-        // If admin deletion fails, try client-side deletion
-        const { error: clientDeleteError } = await supabase.auth.deleteUser();
-        if (clientDeleteError) throw clientDeleteError;
+      // Try to delete user from auth (may require admin privileges)
+      // If that fails, just sign out - user data is already deleted
+      try {
+        const { error: deleteUserError } = await supabase.auth.admin.deleteUser(user.id);
+        if (deleteUserError) {
+          console.warn('Could not delete auth user (may require admin privileges):', deleteUserError);
+        }
+      } catch (adminError) {
+        console.warn('Admin delete not available:', adminError);
       }
       
-      // Sign out after successful deletion
       await signOut();
     } catch (err: any) {
       console.error('Error deleting account:', err);
-      setError('Failed to delete account. Please try again.');
+      setError(t('profile.errors.deleteAccount'));
       setDeleting(false);
       setDeleteConfirm(false);
     }
@@ -271,8 +291,8 @@ export function Profile() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-        <p className="text-gray-600">Manage your account and view your progress</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('profile.title')}</h1>
+        <p className="text-gray-600">{t('profile.subtitle')}</p>
       </div>
 
       {error && (
@@ -291,7 +311,7 @@ export function Profile() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Overview
+            {t('profile.overview')}
           </button>
           <button
             onClick={() => setActiveTab('achievements')}
@@ -301,7 +321,7 @@ export function Profile() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Achievements
+            {t('profile.achievements')}
           </button>
           <button
             onClick={() => setActiveTab('history')}
@@ -311,7 +331,7 @@ export function Profile() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            History
+            {t('profile.historyTab')}
           </button>
           <button
             onClick={() => setActiveTab('settings')}
@@ -321,7 +341,7 @@ export function Profile() {
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
-            Settings
+            {t('profile.settingsTab')}
           </button>
         </div>
 
@@ -334,25 +354,25 @@ export function Profile() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-sm font-medium text-gray-500">Level</h3>
+                <h3 className="text-sm font-medium text-gray-500">{t('profile.stats.level')}</h3>
                 <p className="mt-1 text-2xl font-semibold text-gray-900">{stats?.level || 1}</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-sm font-medium text-gray-500">Words Typed</h3>
+                <h3 className="text-sm font-medium text-gray-500">{t('profile.stats.wordsTyped')}</h3>
                 <p className="mt-1 text-2xl font-semibold text-gray-900">{stats?.words_typed || 0}</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-sm font-medium text-gray-500">Average WPM</h3>
+                <h3 className="text-sm font-medium text-gray-500">{t('profile.stats.averageWPM')}</h3>
                 <p className="mt-1 text-2xl font-semibold text-gray-900">{stats?.wpm || 0}</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-sm font-medium text-gray-500">Accuracy</h3>
+                <h3 className="text-sm font-medium text-gray-500">{t('profile.stats.accuracy')}</h3>
                 <p className="mt-1 text-2xl font-semibold text-gray-900">{stats?.accuracy || 0}%</p>
               </div>
             </div>
 
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Experience Progress</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('profile.experience.title')}</h3>
               <div className="bg-gray-100 h-4 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-indigo-600 rounded-full transition-all duration-300"
@@ -363,12 +383,12 @@ export function Profile() {
               </div>
               <div className="mt-2 flex justify-between text-sm text-gray-600">
                 <span>{stats?.exp || 0} XP</span>
-                <span>{((stats?.level || 1) * 100)} XP needed for next level</span>
+                <span>{((stats?.level || 1) * 100)} {t('profile.experience.needed')}</span>
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Achievements</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('profile.recentAchievements')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {achievements.slice(0, 4).map((achievement) => (
                   <div
@@ -405,7 +425,7 @@ export function Profile() {
                     <div>
                       <h4 className="font-medium text-gray-900">{achievement.name}</h4>
                       <p className="text-sm text-gray-500">
-                        Unlocked {new Date(achievement.unlocked_at).toLocaleDateString()}
+                        {t('profile.history.unlocked')} {new Date(achievement.unlocked_at).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
@@ -427,10 +447,10 @@ export function Profile() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">WPM</th>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Accuracy</th>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profile.history.date')}</th>
+                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profile.history.wpm')}</th>
+                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profile.history.accuracy')}</th>
+                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profile.history.duration')}</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -439,7 +459,7 @@ export function Profile() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{session.date}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{session.wpm}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{session.accuracy}%</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{session.duration} min</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{session.duration} {t('profile.history.minutes')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -457,16 +477,16 @@ export function Profile() {
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
               <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-6 text-white">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold">Account Settings</h2>
+                  <h2 className="text-xl font-semibold">{t('profile.settings.account.title')}</h2>
                   <Settings className="w-6 h-6" />
                 </div>
               </div>
               <div className="p-6 space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Profile Information</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">{t('profile.settings.account.profileInfo')}</h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('profile.settings.account.username')}</label>
                       <div className="flex">
                         <input
                           type="text"
@@ -479,30 +499,30 @@ export function Profile() {
                           disabled={savingUsername || newUsername === profile?.username}
                           className="bg-indigo-600 text-white px-4 py-2 rounded-r-md hover:bg-indigo-700 disabled:bg-indigo-300"
                         >
-                          {savingUsername ? 'Saving...' : 'Save'}
+                          {savingUsername ? t('profile.settings.account.saving') : t('profile.settings.account.save')}
                         </button>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('profile.settings.account.email')}</label>
                       <input
                         type="email"
                         value={user?.email || ''}
                         disabled
                         className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50 text-gray-500"
                       />
-                      <p className="mt-1 text-xs text-gray-500">Email cannot be changed</p>
+                      <p className="mt-1 text-xs text-gray-500">{t('profile.settings.account.emailImmutable')}</p>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Privacy & Security</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">{t('profile.settings.privacy.title')}</h3>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-gray-700">Show my profile on leaderboards</p>
-                        <p className="text-sm text-gray-500">Allow other users to see your typing stats</p>
+                        <p className="font-medium text-gray-700">{t('profile.settings.privacy.showOnLeaderboard')}</p>
+                        <p className="text-sm text-gray-500">{t('profile.settings.privacy.showOnLeaderboardDesc')}</p>
                       </div>
                       <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer"
                            onClick={toggleLeaderboard}>
@@ -515,30 +535,30 @@ export function Profile() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Danger Zone</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">{t('profile.settings.danger.title')}</h3>
                   <div className="p-4 bg-red-50 border border-red-200 rounded-md">
                     <div className="flex items-start">
                       <Shield className="w-6 h-6 text-red-500 mr-3 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Delete Account</p>
-                        <p className="text-sm text-gray-600 mb-3">Permanently delete your account and all associated data</p>
+                        <p className="font-medium text-gray-900">{t('profile.settings.danger.deleteAccount')}</p>
+                        <p className="text-sm text-gray-600 mb-3">{t('profile.settings.danger.deleteAccountDesc')}</p>
                         {deleteConfirm ? (
                           <div className="space-y-2">
-                            <p className="text-sm text-red-600">Are you sure? This action cannot be undone.</p>
+                            <p className="text-sm text-red-600">{t('profile.settings.danger.deleteConfirm')}</p>
                             <div className="flex space-x-2">
                               <button
                                 onClick={handleDeleteAccount}
                                 disabled={deleting}
                                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-red-400"
                               >
-                                {deleting ? 'Deleting...' : 'Yes, Delete My Account'}
+                                {deleting ? t('profile.settings.danger.deleting') : t('profile.settings.danger.yesDelete')}
                               </button>
                               <button
                                 onClick={() => setDeleteConfirm(false)}
                                 disabled={deleting}
                                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:bg-gray-100"
                               >
-                                Cancel
+                                {t('profile.settings.danger.cancel')}
                               </button>
                             </div>
                           </div>
@@ -547,7 +567,7 @@ export function Profile() {
                             onClick={() => setDeleteConfirm(true)}
                             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           >
-                            Delete Account
+                            {t('profile.settings.danger.deleteAccount')}
                           </button>
                         )}
                       </div>

@@ -7,50 +7,23 @@ import { useAuth } from '../contexts/AuthContext';
 import { LanguageSelector } from './LanguageSelector';
 import { useTranslation } from 'react-i18next';
 
-// Word list for the basic mode
-const words = [
+// Word list for the basic mode (can be overridden by translations)
+const defaultWords = [
   'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I',
-  'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
-  'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
-  'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
-  'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me'
+  'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at'
 ];
 
-// Sentences for the sentence mode
-const sentences = [
+// Default sentences (fallbacks if translations are missing)
+const defaultSentences = [
   "The quick brown fox jumps over the lazy dog.",
-  "All that glitters is not gold.",
-  "Actions speak louder than words.",
-  "A journey of a thousand miles begins with a single step.",
-  "Don't count your chickens before they hatch.",
-  "The early bird catches the worm.",
-  "Practice makes perfect.",
-  "Where there's a will, there's a way.",
-  "You can't judge a book by its cover.",
-  "Better late than never.",
   "Two wrongs don't make a right.",
-  "The pen is mightier than the sword.",
-  "When in Rome, do as the Romans do.",
-  "The grass is always greener on the other side.",
-  "Fortune favors the bold.",
-  "People who live in glass houses should not throw stones.",
-  "Hope for the best, prepare for the worst.",
-  "Birds of a feather flock together.",
-  "Keep your friends close and your enemies closer.",
-  "A picture is worth a thousand words."
+  "Practice makes perfect."
 ];
 
-// Paragraphs for the paragraph mode
-const paragraphs = [
-  "The sun was setting behind the mountains, casting long shadows across the valley. A gentle breeze rustled the leaves of the trees, creating a soothing melody. In the distance, a bird called out to its mate, its song echoing through the quiet evening air. It was a perfect moment of peace and tranquility.",
-  
-  "The old bookstore on the corner was a treasure trove of forgotten stories. Dusty shelves lined the walls, filled with volumes of all sizes and colors. The scent of aged paper and leather bindings filled the air, creating an atmosphere of mystery and adventure. Each book held a world waiting to be discovered.",
-  
-  "The city came alive at night, with bright lights illuminating the streets and buildings. People hurried along the sidewalks, some heading home after a long day, others just beginning their evening adventures. Street vendors called out to passersby, offering everything from hot food to handmade crafts. The energy was electric and contagious.",
-  
-  "The small café was tucked away on a side street, easy to miss if you weren't looking for it. Inside, the aroma of freshly ground coffee beans and baked goods welcomed visitors. Soft music played in the background, complementing the murmur of conversations. It was a perfect spot to escape the hustle and bustle of daily life.",
-  
-  "The garden was a riot of colors and scents, with flowers of every hue blooming in carefully tended beds. Butterflies fluttered from blossom to blossom, while bees buzzed busily collecting nectar. A stone path wound through the garden, leading to a small pond where water lilies floated on the surface. It was a haven of natural beauty."
+// Default paragraphs (fallbacks)
+const defaultParagraphs = [
+  "The sun was setting behind the mountains, casting long shadows across the valley. A gentle breeze rustled the leaves of the trees, creating a soothing melody.",
+  "The old bookstore on the corner was a treasure trove of forgotten stories. Dusty shelves lined the walls, filled with volumes of all sizes and colors."
 ];
 
 // Game mode types
@@ -82,7 +55,7 @@ export function TypingGame() {
   const [gameCompleted, setGameCompleted] = useState(false);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [errors, setErrors] = useState(0);
-  const [error, setError] = useState<string | null>(null);
+  // error state kept if needed; otherwise unused so remove to satisfy linter
   
   // Use refs to avoid unnecessary re-renders
   const totalAttemptsRef = useRef(0);
@@ -108,20 +81,28 @@ export function TypingGame() {
 
   // Function to get new text based on game mode
   const getNewText = useCallback(() => {
+    // Pull lists from translations if available; otherwise use defaults
+    const wordsList = (t('game.wordsList', { returnObjects: true }) as string[]) || defaultWords;
+    const sentencesList = (t('game.sentences', { returnObjects: true }) as string[]) || defaultSentences;
+    const paragraphsList = (t('game.paragraphs', { returnObjects: true }) as string[]) || defaultParagraphs;
+
     let text = '';
     switch (gameMode) {
-      case 'words':
-        const randomIndex = Math.floor(Math.random() * words.length);
-        text = words[randomIndex];
+      case 'words': {
+        const randomIndex = Math.floor(Math.random() * wordsList.length);
+        text = wordsList[randomIndex];
         break;
-      case 'sentences':
-        const sentenceIndex = Math.floor(Math.random() * sentences.length);
-        text = sentences[sentenceIndex];
+      }
+      case 'sentences': {
+        const sentenceIndex = Math.floor(Math.random() * sentencesList.length);
+        text = sentencesList[sentenceIndex];
         break;
-      case 'paragraphs':
-        const paragraphIndex = Math.floor(Math.random() * paragraphs.length);
-        text = paragraphs[paragraphIndex];
+      }
+      case 'paragraphs': {
+        const paragraphIndex = Math.floor(Math.random() * paragraphsList.length);
+        text = paragraphsList[paragraphIndex];
         break;
+      }
     }
     setCurrentText(text);
     setCurrentPosition(0);
@@ -175,7 +156,7 @@ export function TypingGame() {
       }
 
       // Get the set of current achievement IDs
-      const currentAchievementIds = new Set(userAchievements?.map(a => a.achievement_id) || []);
+  const currentAchievementIds = new Set<string>((userAchievements as any[] | undefined)?.map(a => String(a.achievement_id)) || []);
       
       // Find new achievements (not in previous set)
       const newAchievementIds = Array.from(currentAchievementIds).filter(
@@ -187,7 +168,7 @@ export function TypingGame() {
         const { data: achievementDetails, error: detailsError } = await supabase
           .from('achievements')
           .select('*')
-          .in('id', newAchievementIds);
+          .in('id', newAchievementIds as string[]);
 
         if (detailsError) {
           console.error("Error fetching achievement details:", detailsError);
@@ -195,8 +176,14 @@ export function TypingGame() {
         }
 
         if (achievementDetails && achievementDetails.length > 0) {
-          // Show the most recent achievement
-          setUnlockedAchievement(achievementDetails[0]);
+          // Show the most recent achievement (cast fields safely)
+          const first = achievementDetails[0] as any;
+          setUnlockedAchievement({
+            id: String(first.id),
+            name: String(first.name ?? ''),
+            description: String(first.description ?? ''),
+            icon: String(first.icon ?? '')
+          });
           setShowAchievement(true);
           
           // Hide after 5 seconds
@@ -281,7 +268,7 @@ export function TypingGame() {
           return;
         }
 
-        if (!existingStats) {
+  if (!existingStats) {
           // Create initial stats
           const { data: newStats, error: insertError } = await supabase
             .from('user_stats')
@@ -302,7 +289,15 @@ export function TypingGame() {
             throw insertError;
           }
 
-          statsRef.current = newStats;
+          const ns: any = newStats;
+          statsRef.current = {
+            level: ns.level || 1,
+            exp: ns.exp || 0,
+            words_typed: ns.words_typed || 0,
+            time_spent: ns.time_spent || 0,
+            wpm: ns.wpm || 0,
+            accuracy: ns.accuracy || 100
+          };
           setLevel(1);
           setExp(0);
           setScore(0);
@@ -318,23 +313,31 @@ export function TypingGame() {
           wpmRef.current = 0;
           accuracyRef.current = 100;
         } else {
-          statsRef.current = existingStats;
-          
+          const es: any = existingStats;
+          statsRef.current = {
+            level: es.level || 1,
+            exp: es.exp || 0,
+            words_typed: es.words_typed || 0,
+            time_spent: es.time_spent || 0,
+            wpm: es.wpm || 0,
+            accuracy: es.accuracy || 100
+          };
+
           // Set state values
-          setLevel(existingStats.level || 1);
-          setExp(existingStats.exp || 0);
-          setScore(existingStats.words_typed || 0);
-          setTimeSpent(existingStats.time_spent || 0);
-          setWpm(existingStats.wpm || 0);
-          setAccuracy(existingStats.accuracy || 100);
-          
+          setLevel(es.level || 1);
+          setExp(es.exp || 0);
+          setScore(es.words_typed || 0);
+          setTimeSpent(es.time_spent || 0);
+          setWpm(es.wpm || 0);
+          setAccuracy(es.accuracy || 100);
+
           // Set ref values
-          levelRef.current = existingStats.level || 1;
-          expRef.current = existingStats.exp || 0;
-          scoreRef.current = existingStats.words_typed || 0;
-          timeSpentRef.current = existingStats.time_spent || 0;
-          wpmRef.current = existingStats.wpm || 0;
-          accuracyRef.current = existingStats.accuracy || 100;
+          levelRef.current = es.level || 1;
+          expRef.current = es.exp || 0;
+          scoreRef.current = es.words_typed || 0;
+          timeSpentRef.current = es.time_spent || 0;
+          wpmRef.current = es.wpm || 0;
+          accuracyRef.current = es.accuracy || 100;
         }
 
         // Fetch user's current achievements
@@ -346,12 +349,12 @@ export function TypingGame() {
         if (achievementsError) {
           console.error('Error fetching user achievements:', achievementsError);
         } else {
-          // Store current achievements to compare later
-          previousAchievementsRef.current = new Set(userAchievements?.map(a => a.achievement_id) || []);
+          // Store current achievements to compare later (ensure strings)
+          previousAchievementsRef.current = new Set<string>((userAchievements as any[] | undefined)?.map(a => String(a.achievement_id)) || []);
         }
       } catch (error: any) {
         console.error("Error fetching data from Supabase:", error);
-        setError(error.message || "Failed to load user data");
+        // keep console error; do not set local UI error state here
       } finally {
         setIsLoading(false);
       }
