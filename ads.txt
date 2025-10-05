@@ -1,0 +1,19 @@
+'ve added Google AdSense integration to your application. Here's what you need to do to complete the setup:
+
+Sign up for Google AdSense if you haven't already at https://www.google.com/adsense
+
+Once approved, replace YOUR_CLIENT_ID in both the index.html and Advertisement.tsx files with your actual AdSense publisher ID (it looks like "ca-pub-XXXXXXXXXXXXXXXX")
+
+Create ad units in your AdSense account and replace the slot props in the Advertisement components with your actual ad unit IDs
+
+The advertisements have been strategically placed in:
+
+Dashboard: Horizontal ad at the top and vertical ad in the sidebar
+Landing page: Horizontal ad after the hero section and rectangular ad before the footer
+Important notes:
+
+Make sure your site complies with Google AdSense policies
+Test the ads in production to ensure they display correctly
+Consider user experience when placing ads - they shouldn't interfere with core functionality
+Monitor ad performance through your AdSense dashboard
+The Advertisement component is reusable, so you can easily add more ad placements by importing and using it in other components as needed.

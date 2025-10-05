@@ -1,0 +1,112 @@
+{
+  "common": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "level": "Level",
+    "accuracy": "Accuracy",
+    "wpm": "WPM",
+    "wordsTyped": "Words Typed",
+    "timeSpent": "Time Spent",
+    "play": "Play",
+    "profile": "Profile",
+    "leaderboard": "Leaderboard",
+    "settings": "Settings",
+    "and": "&"
+  },
+  "landing": {
+    "hero": {
+      "title": "Master Your Typing Skills",
+      "subtitle": "Join thousands of users improving their typing speed and accuracy through our engaging and interactive platform.",
+      "tagline": "Master your keyboard skills"
+    },
+    "features": {
+      "improve": {
+        "title": "Improve Your Typing",
+        "description": "Practice and enhance your typing speed and accuracy with our engaging typing challenges."
+      },
+      "track": {
+        "title": "Track Progress",
+        "description": "Watch your skills grow with detailed statistics and level progression system."
+      },
+      "compete": {
+        "title": "Compete Globally",
+        "description": "Join the global leaderboard and compete with typists worldwide."
+      }
+    },
+    "joinCommunity": {
+      "title": "Join Our Growing Community",
+      "subtitle": "Connect with thousands of typing enthusiasts"
+    }
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create Account",
+    "enterEmail": "Enter your email",
+    "enterPassword": "Enter your password",
+    "alreadyHaveAccount": "Already have an account? Sign In",
+    "needAccount": "Need an account? Sign Up",
+    "processing": "Processing...",
+    "termsAgree": "By continuing, you agree to our",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "joinTyping": "Join our community of typing enthusiasts",
+    "signInContinue": "Sign in to continue your typing journey"
+  },
+  "game": {
+    "modes": {
+      "title": "Game Modes",
+      "words": "Single Words",
+      "sentences": "Sentences",
+      "paragraphs": "Paragraphs"
+    },
+    "stats": {
+      "level": "Level",
+      "words": "Words",
+      "wpm": "WPM",
+      "accuracy": "Accuracy",
+      "progress": "Progress",
+      "errors": "Errors",
+      "time": "Time"
+    },
+    "actions": {
+      "startTyping": "Click here to start typing...",
+      "typeHere": "Type here...",
+      "startNew": "Start New Game",
+      "greatJob": "Great job! You completed the text."
+    },
+    "achievement": {
+      "unlocked": "Achievement Unlocked!"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account and view your progress",
+    "overview": "Overview",
+    "achievements": "Achievements",
+    "history": "History",
+    "settings": "Settings",
+    "stats": {
+      "level": "Level",
+      "wordsTyped": "Words Typed",
+      "averageWPM": "Average WPM",
+      "accuracy": "Accuracy"
+    }
+  },
+  "leaderboard": {
+    "title": "Top Players",
+    "noPlayers": "No players have joined the leaderboard yet. Be the first to start typing and claim the top spot!",
+    "startTyping": "Start Typing"
+  },
+  "settings": {
+    "language": {
+      "title": "Language",
+      "select": "Select Language",
+      "en": "English",
+      "pt": "Portuguese"
+    }
+  }
+}

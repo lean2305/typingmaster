@@ -1,0 +1,112 @@
+{
+  "common": {
+    "signIn": "Entrar",
+    "signUp": "Registrar",
+    "signOut": "Sair",
+    "email": "Email",
+    "password": "Senha",
+    "username": "Nome de usuário",
+    "level": "Nível",
+    "accuracy": "Precisão",
+    "wpm": "PPM",
+    "wordsTyped": "Palavras Digitadas",
+    "timeSpent": "Tempo Gasto",
+    "play": "Jogar",
+    "profile": "Perfil",
+    "leaderboard": "Classificação",
+    "settings": "Configurações",
+    "and": "e"
+  },
+  "landing": {
+    "hero": {
+      "title": "Domine Suas Habilidades de Digitação",
+      "subtitle": "Junte-se a milhares de usuários melhorando sua velocidade e precisão de digitação através da nossa plataforma envolvente e interativa.",
+      "tagline": "Domine suas habilidades no teclado"
+    },
+    "features": {
+      "improve": {
+        "title": "Melhore Sua Digitação",
+        "description": "Pratique e aprimore sua velocidade e precisão de digitação com nossos desafios envolventes."
+      },
+      "track": {
+        "title": "Acompanhe Progresso",
+        "description": "Veja suas habilidades crescerem com estatísticas detalhadas e sistema de progressão de níveis."
+      },
+      "compete": {
+        "title": "Compete Globalmente",
+        "description": "Entre na classificação global e compete com digitadores do mundo inteiro."
+      }
+    },
+    "joinCommunity": {
+      "title": "Junte-se à Nossa Comunidade em Crescimento",
+      "subtitle": "Conecte-se com milhares de entusiastas da digitação"
+    }
+  },
+  "auth": {
+    "welcomeBack": "Bem-vindo de Volta",
+    "createAccount": "Criar Conta",
+    "enterEmail": "Digite seu email",
+    "enterPassword": "Digite sua senha",
+    "alreadyHaveAccount": "Já tem uma conta? Entre",
+    "needAccount": "Precisa de uma conta? Registre-se",
+    "processing": "Processando...",
+    "termsAgree": "Ao continuar, você concorda com nossos",
+    "termsOfService": "Termos de Serviço",
+    "privacyPolicy": "Política de Privacidade",
+    "joinTyping": "Junte-se à nossa comunidade de entusiastas da digitação",
+    "signInContinue": "Entre para continuar sua jornada de digitação"
+  },
+  "game": {
+    "modes": {
+      "title": "Modos de Jogo",
+      "words": "Palavras Únicas",
+      "sentences": "Frases",
+      "paragraphs": "Parágrafos"
+    },
+    "stats": {
+      "level": "Nível",
+      "words": "Palavras",
+      "wpm": "PPM",
+      "accuracy": "Precisão",
+      "progress": "Progresso",
+      "errors": "Erros",
+      "time": "Tempo"
+    },
+    "actions": {
+      "startTyping": "Clique aqui para começar a digitar...",
+      "typeHere": "Digite aqui...",
+      "startNew": "Iniciar Novo Jogo",
+      "greatJob": "Ótimo trabalho! Você completou o texto."
+    },
+    "achievement": {
+      "unlocked": "Conquista Desbloqueada!"
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "subtitle": "Gerencie sua conta e veja seu progresso",
+    "overview": "Visão Geral",
+    "achievements": "Conquistas",
+    "history": "Histórico",
+    "settings": "Configurações",
+    "stats": {
+      "level": "Nível",
+      "wordsTyped": "Palavras Digitadas",
+      "averageWPM": "PPM Médio",
+      "accuracy": "Precisão"
+    }
+  },
+  "leaderboard": {
+    "title": "Melhores Jogadores",
+    "noPlayers": "Nenhum jogador entrou na classificação ainda. Seja o primeiro a começar a digitar e conquiste o primeiro lugar!",
+    "startTyping": "Começar a Digitar"
+  },
+  "settings": {
+    "language": {
+      "title": "Idioma",
+      "select": "Selecionar Idioma",
+      "en": "Inglês",
+      "pt": "Português"
+    }
+  }
+}
