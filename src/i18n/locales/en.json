@@ -154,8 +154,13 @@
     "actions": {
       "startTyping": "Click here to start typing...",
       "typeHere": "Type here...",
+      "showAccents": "Show accents",
+      "hideAccents": "Hide accents",
       "startNew": "Start New Game",
       "greatJob": "Great job! You completed the text."
+    },
+    "hint": {
+      "useAccents": "Click an accent to insert it at the cursor"
     },
     "achievement": {
       "unlocked": "Achievement Unlocked!"

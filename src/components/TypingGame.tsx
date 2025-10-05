@@ -39,9 +39,12 @@ interface Achievement {
 export function TypingGame() {
   const { t } = useTranslation();
   const { signOut, user } = useAuth();
+  const textContainerRef = useRef<HTMLDivElement | null>(null);
   const [gameMode, setGameMode] = useState<GameMode>('words');
   const [currentText, setCurrentText] = useState('');
   const [input, setInput] = useState('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [showAccents, setShowAccents] = useState(false);
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
   const [exp, setExp] = useState(0);
@@ -85,24 +88,77 @@ export function TypingGame() {
     const wordsList = (t('game.wordsList', { returnObjects: true }) as string[]) || defaultWords;
     const sentencesList = (t('game.sentences', { returnObjects: true }) as string[]) || defaultSentences;
     const paragraphsList = (t('game.paragraphs', { returnObjects: true }) as string[]) || defaultParagraphs;
+    // Helper: pick a random item from an array (safe)
+    const pickRandom = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+
+    // For 'words' mode we show a single random word (not a phrase)
+    const generateWordsText = () => {
+      return pickRandom(wordsList);
+    };
+
+    // Generate a text made of 1..3 sentences (choose randomly)
+    const generateSentencesText = () => {
+      const min = 1;
+      const max = 3;
+      const count = Math.floor(Math.random() * (max - min + 1)) + min;
+      const chosen: string[] = [];
+
+      // If sentencesList is small, allow constructing sentences from wordsList
+      if ((sentencesList || []).length === 0) {
+        for (let i = 0; i < count; i++) {
+          const sentence = generateWordsText().replace(/^[a-z]/, (c) => c.toUpperCase()) + '.';
+          chosen.push(sentence);
+        }
+      } else {
+        for (let i = 0; i < count; i++) {
+          chosen.push(pickRandom(sentencesList));
+        }
+      }
+
+      return chosen.join(' ');
+    };
+
+    // Generate a paragraph by combining several sentences (3..7 sentences)
+    const generateParagraphText = () => {
+      const minS = 3;
+      const maxS = 7;
+      const count = Math.floor(Math.random() * (maxS - minS + 1)) + minS;
+      const pieces: string[] = [];
+
+      // Prefer splitting provided paragraphs into sentences if available
+      const sourceSentences: string[] = [];
+      for (const p of paragraphsList) {
+        // naive split on sentence enders
+        const parts = p.split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(Boolean);
+        sourceSentences.push(...parts);
+      }
+
+      // also include the sentencesList as candidates
+      sourceSentences.push(...sentencesList);
+
+      if (sourceSentences.length === 0) {
+        // fallback to generating from words
+        return generateSentencesText();
+      }
+
+      for (let i = 0; i < count; i++) {
+        pieces.push(pickRandom(sourceSentences));
+      }
+
+      return pieces.join(' ');
+    };
 
     let text = '';
     switch (gameMode) {
-      case 'words': {
-        const randomIndex = Math.floor(Math.random() * wordsList.length);
-        text = wordsList[randomIndex];
+      case 'words':
+        text = generateWordsText();
         break;
-      }
-      case 'sentences': {
-        const sentenceIndex = Math.floor(Math.random() * sentencesList.length);
-        text = sentencesList[sentenceIndex];
+      case 'sentences':
+        text = generateSentencesText();
         break;
-      }
-      case 'paragraphs': {
-        const paragraphIndex = Math.floor(Math.random() * paragraphsList.length);
-        text = paragraphsList[paragraphIndex];
+      case 'paragraphs':
+        text = generateParagraphText();
         break;
-      }
     }
     setCurrentText(text);
     setCurrentPosition(0);
@@ -389,8 +445,57 @@ export function TypingGame() {
     };
   }, [isLoading, updateWPM, gameStarted, gameCompleted]);
 
+  // Stronger anti-cheat: prevent selection/copy/paste specifically when interacting with the
+  // game's text container. This uses a container ref and document-level handlers so it's
+  // harder to bypass via selection events. We scope prevention to events originating
+  // from nodes inside the container to avoid breaking the rest of the app.
+  useEffect(() => {
+    const handleCopy = (e: ClipboardEvent) => {
+      const target = e.target as Node | null;
+      if (textContainerRef.current && target && textContainerRef.current.contains(target)) {
+        e.preventDefault();
+      }
+    };
+
+    const handleSelectionChange = () => {
+      const sel = document.getSelection();
+      if (!sel) return;
+
+      // If selection is non-empty and the selection's anchor is inside our container,
+      // clear it immediately.
+      if (sel.toString().length > 0) {
+        let node: Node | null = sel.anchorNode;
+        // climb from text node to element node
+        while (node && node.nodeType === Node.TEXT_NODE) node = node.parentNode;
+        if (node && textContainerRef.current && textContainerRef.current.contains(node)) {
+          sel.removeAllRanges();
+        }
+      }
+    };
+
+    const handleContextMenu = (e: MouseEvent) => {
+      const target = e.target as Node | null;
+      if (textContainerRef.current && target && textContainerRef.current.contains(target)) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('copy', handleCopy, true);
+    document.addEventListener('selectionchange', handleSelectionChange, true);
+    document.addEventListener('contextmenu', handleContextMenu, true);
+
+    return () => {
+      document.removeEventListener('copy', handleCopy, true);
+      document.removeEventListener('selectionchange', handleSelectionChange, true);
+      document.removeEventListener('contextmenu', handleContextMenu, true);
+    };
+  }, []);
+
   // Process user input for words mode
   const handleWordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // start the timer/game on first keystroke in words mode
+    if (!gameStarted) startGame();
+
     const value = e.target.value;
     setInput(value);
     
@@ -427,6 +532,34 @@ export function TypingGame() {
       setInput('');
       getNewText();
     }
+  };
+
+  // Insert an accent character at the current caret position inside the input
+  const insertAccent = (char: string) => {
+    const el = inputRef.current;
+    if (!el) {
+      // fallback: append
+      setInput(prev => prev + char);
+      return;
+    }
+
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? start;
+    const before = el.value.slice(0, start);
+    const after = el.value.slice(end);
+    const next = before + char + after;
+    setInput(next);
+
+    // set caret after inserted char
+    requestAnimationFrame(() => {
+      el.focus();
+      const pos = start + char.length;
+      try {
+        el.setSelectionRange(pos, pos);
+      } catch (err) {
+        // ignore if not supported
+      }
+    });
   };
 
   // Process user input for sentences and paragraphs mode
@@ -653,27 +786,57 @@ export function TypingGame() {
         </div>
 
         {/* Current text display */}
-        <div className="text-2xl font-medium text-center mb-8 p-8 bg-white rounded-xl shadow-md">
-          {gameMode === 'words' ? (
-            <div>{currentText}</div>
-          ) : (
-            <div className="text-left whitespace-pre-wrap">
-              {currentText.split('').map((char, index) => (
-                <span 
-                  key={index} 
-                  className={`${
-                    index < currentPosition 
-                      ? 'text-green-600' 
-                      : index === currentPosition 
-                        ? 'bg-indigo-200' 
-                        : 'text-gray-800'
-                  }`}
+        <div
+          ref={textContainerRef}
+          className="text-2xl font-medium text-center mb-8 p-8 bg-white rounded-xl shadow-md select-none"
+          onCopy={(e) => e.preventDefault()}
+          onContextMenu={(e) => e.preventDefault()}
+          onMouseDown={(e) => e.preventDefault()}
+          aria-hidden={gameStarted ? undefined : false}
+          // prevent drag/select via keyboard as well
+          onKeyDown={(e) => {
+            // prevent Ctrl/Cmd+A / Ctrl/Cmd+C while focus is inside this container
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'a' || e.key === 'c')) {
+              e.preventDefault();
+            }
+          }}
+          onDragStart={(e) => e.preventDefault()}
+          onDoubleClick={(e) => e.preventDefault()}
+          onPointerDown={(e) => e.preventDefault()}
+        >
+          <div className={`${gameMode === 'words' ? 'text-center' : 'text-left whitespace-pre-wrap'}`}>
+            {currentText.split('').map((char, index) => {
+              const typed = input || '';
+              const typedChar = typed[index];
+              let spanClass = 'text-gray-800';
+
+              if (index < typed.length) {
+                // already typed: correct or incorrect
+                if (typedChar === char) {
+                  spanClass = 'text-green-600';
+                } else {
+                  spanClass = 'text-red-600 bg-red-100 rounded-sm';
+                }
+              } else if (index === typed.length) {
+                // current caret position
+                spanClass = 'bg-indigo-200 ring-1 ring-indigo-300 rounded-sm';
+              } else {
+                spanClass = 'text-gray-800';
+              }
+
+              // show visible space as NBSP to keep spacing and allow background to show
+              const displayChar = char === ' ' ? '\u00A0' : char;
+
+              return (
+                <span
+                  key={index}
+                  className={`${spanClass} inline-block px-0.5 transition-colors duration-150`}
                 >
-                  {char}
+                  {displayChar}
                 </span>
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
         </div>
 
         {/* Input field */}
@@ -689,14 +852,54 @@ export function TypingGame() {
           </div>
         ) : (
           <div>
+            <div className="relative">
             <input
               type="text"
               value={input}
+              ref={inputRef}
               onChange={handleInput}
+              onPaste={(e) => {
+                // block paste to prevent copy/paste cheating
+                e.preventDefault();
+              }}
+              onKeyDown={(e) => {
+                // Block common clipboard shortcuts while focused on input
+                const isModifier = e.ctrlKey || e.metaKey;
+                const key = e.key.toLowerCase();
+                if (isModifier && (key === 'c' || key === 'v' || key === 'a' || key === 'x')) {
+                  e.preventDefault();
+                }
+              }}
               className="w-full text-xl p-6 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors"
               placeholder={gameStarted ? t('game.actions.typeHere') : t('game.actions.startTyping')}
               autoFocus
             />
+            <div className="mt-2 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setShowAccents(s => !s)}
+                className="text-sm text-indigo-600 hover:underline"
+              >
+                {showAccents ? t('game.actions.hideAccents') : t('game.actions.showAccents')}
+              </button>
+              <div className="text-sm text-gray-600">{t('game.hint.useAccents')}</div>
+            </div>
+
+            {showAccents && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {['á','é','í','ó','ú','ã','õ','â','ê','ô','ç','Á','É','Í','Ó','Ú','Ã','Õ','Â','Ê','Ô','Ç'].map(ch => (
+                  <button
+                    key={ch}
+                    type="button"
+                    onClick={() => insertAccent(ch)}
+                    className="px-2 py-1 bg-gray-100 rounded-md hover:bg-gray-200"
+                  >
+                    {ch}
+                  </button>
+                ))}
+              </div>
+            )}
+            </div>
             {gameMode !== 'words' && (
               <div className="mt-2 flex justify-between text-sm">
                 <span className="text-gray-600">

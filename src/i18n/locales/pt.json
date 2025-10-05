@@ -150,8 +150,13 @@
     "actions": {
       "startTyping": "Clique aqui para começar a digitar...",
       "typeHere": "Escreva aqui...",
+      "showAccents": "Mostrar acentos",
+      "hideAccents": "Ocultar acentos",
       "startNew": "Iniciar novo jogo",
       "greatJob": "Bom trabalho! Concluiu o texto."
+    },
+    "hint": {
+      "useAccents": "Clique num acento para o inserir na posição do cursor"
     },
     "achievement": {
       "unlocked": "Conquista Desbloqueada!"
