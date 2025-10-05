@@ -1,11 +1,11 @@
 {
   "common": {
     "signIn": "Entrar",
-    "signUp": "Registrar",
+    "signUp": "Registar",
     "signOut": "Sair",
     "email": "Email",
-    "password": "Senha",
-    "username": "Nome de usuário",
+    "password": "Palavra-passe",
+    "username": "Nome de utilizador",
     "level": "Nível",
     "accuracy": "Precisão",
     "wpm": "PPM",
@@ -22,121 +22,119 @@
       "typingAlt": "Pessoa digitando no teclado"
     },
     "hero": {
-      "title": "Domine Suas Habilidades de Digitação",
-      "subtitle": "Junte-se a milhares de usuários melhorando sua velocidade e precisão de digitação através da nossa plataforma envolvente e interativa.",
-      "tagline": "Domine suas habilidades no teclado"
+      "title": "Domine as suas habilidades de digitação",
+      "subtitle": "Junte-se a milhares de utilizadores a melhorar a sua velocidade e precisão de digitação através da nossa plataforma envolvente e interativa.",
+      "tagline": "Domine a sua utilização do teclado"
     },
     "features": {
       "improve": {
-        "title": "Melhore Sua Digitação",
-        "description": "Pratique e aprimore sua velocidade e precisão de digitação com nossos desafios envolventes."
+        "title": "Melhore a sua digitação",
+        "description": "Pratique e aprimore a sua velocidade e precisão de digitação com os nossos desafios envolventes."
       },
       "track": {
-        "title": "Acompanhe Progresso",
-        "description": "Veja suas habilidades crescerem com estatísticas detalhadas e sistema de progressão de níveis."
+        "title": "Acompanhe o progresso",
+        "description": "Veja as suas competências crescerem com estatísticas detalhadas e um sistema de progressão por níveis."
       },
       "compete": {
-        "title": "Compete Globalmente",
-        "description": "Entre na classificação global e compete com digitadores do mundo inteiro."
+        "title": "Compita a nível global",
+        "description": "Participe na classificação global e compita com digitadores de todo o mundo."
       }
     },
     "joinCommunity": {
-      "title": "Junte-se à Nossa Comunidade em Crescimento",
+      "title": "Junte-se à nossa comunidade em crescimento",
       "subtitle": "Conecte-se com milhares de entusiastas da digitação"
     },
     "whyChoose": {
-      "title": "Por Que Escolher o TypingMaster?",
+      "title": "Porque escolher o TypingMaster?",
       "boostSpeed": {
-        "title": "Aumente Sua Velocidade",
-        "description": "Aumente sua velocidade de digitação com exercícios direcionados"
+        "title": "Aumente a sua velocidade",
+        "description": "Aumente a sua velocidade de digitação com exercícios focados"
       },
       "trackProgress": {
-        "title": "Acompanhe Seu Progresso",
-        "description": "Monitore sua melhoria ao longo do tempo"
+        "title": "Acompanhe o seu progresso",
+        "description": "Monitorize a sua evolução ao longo do tempo"
       },
       "earnAchievements": {
-        "title": "Ganhe Conquistas",
-        "description": "Desbloqueie emblemas conforme alcança novos marcos"
+        "title": "Ganhe conquistas",
+        "description": "Desbloqueie distintivos à medida que alcança novos marcos"
       }
     },
     "advancedFeatures": {
       "title": "Recursos Avançados"
     },
     "featuresShowcase": {
-      "powerfulTitle": "Recursos Poderosos",
-      "description": "Nossa plataforma foi projetada para ajudar você a melhorar suas habilidades de digitação através de exercícios envolventes e análises abrangentes.",
+      "powerfulTitle": "Funcionalidades poderosas",
+      "description": "A nossa plataforma foi concebida para ajudar a melhorar as suas competências de digitação através de exercícios envolventes e análises detalhadas.",
       "list": [
         "Sessões de prática personalizadas",
-        "Detecção de erros em tempo real",
+        "Deteção de erros em tempo real",
         "Acompanhamento de progresso e análises",
-        "Classificações globais e competições",
+        "Quadros de líderes e competições globais",
         "Sistema de conquistas para motivação"
       ],
-      "body": "TypingMaster oferece um conjunto abrangente de recursos projetados para ajudá-lo a se tornar um especialista em digitação."
+      "body": "O TypingMaster oferece um conjunto abrangente de funcionalidades concebidas para o ajudar a tornar-se um especialista em digitação."
     },
     "benefits": [
       {
-        "title": "Melhora de Velocidade",
-        "description": "Aumente sua velocidade de digitação em até 50% em apenas 2 semanas de prática regular"
+        "title": "Aumento da velocidade",
+        "description": "Aumente a sua velocidade de digitação até 50% em apenas 2 semanas de prática regular"
       },
       {
-        "title": "Treino de Precisão",
-        "description": "Reduza erros e desenvolva memória muscular para digitação precisa"
+        "title": "Treino de precisão",
+        "description": "Reduza erros e desenvolva memória muscular para uma digitação mais precisa"
       },
       {
-        "title": "Certificação de Habilidade",
-        "description": "Ganhe certificados para demonstrar sua proficiência em digitação a empregadores"
+        "title": "Certificação",
+        "description": "Obtenha certificados para demonstrar a sua proficiência em digitação perante empregadores"
       }
     ],
     "testimonials": [
       {
-        "quote": "O TypingMaster me ajudou a aumentar minha velocidade de digitação de 40 para 80 PPM em apenas duas semanas!",
+        "quote": "O TypingMaster ajudou-me a aumentar a minha velocidade de digitação de 40 para 80 PPM em apenas duas semanas!",
         "author": "Sarah J.",
         "role": "Redatora"
       },
       {
-        "quote": "Os elementos de gamificação tornam a prática de digitação realmente divertida. Aguardo minhas sessões diárias.",
+        "quote": "Os elementos de gamificação tornam a prática de digitação realmente divertida. Aguardo as minhas sessões diárias.",
         "author": "Michael T.",
         "role": "Desenvolvedor de Software"
       },
       {
-        "quote": "Como professora, recomendo o TypingMaster a todos os meus alunos. É a ferramenta de digitação mais eficaz que encontrei.",
+        "quote": "Como professora, recomendo o TypingMaster a todos os meus alunos. É a ferramenta de digitação mais eficaz que já utilizei.",
         "author": "Rebecca L.",
-        "role": "Professora do Ensino Médio"
+        "role": "Professora do Ensino Secundário"
       }
     ],
     "cta": {
       "title": "Pronto para começar a digitar?",
-      "subtitle": "Crie sua conta agora e junte-se à nossa comunidade de digitadores dedicados!",
+      "subtitle": "Crie a sua conta agora e junte-se à nossa comunidade de utilizadores dedicados!",
       "button": "Começar"
     },
     "footer": {
-      "improveSkills": "Melhore suas habilidades de digitação hoje!"
-    }
-    ,
-    "testimonialsTitle": "O que nossos usuários dizem",
+      "improveSkills": "Melhore as suas competências de digitação hoje!"
+    },
+    "testimonialsTitle": "O que os nossos utilizadores dizem",
     "copyright": "© {{year}} {{appName}}. Todos os direitos reservados."
   },
   "auth": {
-    "welcomeBack": "Bem-vindo de Volta",
-    "createAccount": "Criar Conta",
-    "enterEmail": "Digite seu email",
-    "enterPassword": "Digite sua senha",
-    "alreadyHaveAccount": "Já tem uma conta? Entre",
-    "needAccount": "Precisa de uma conta? Registre-se",
-    "processing": "Processando...",
-    "termsAgree": "Ao continuar, você concorda com nossos",
+    "welcomeBack": "Bem‑vindo de volta",
+    "createAccount": "Criar conta",
+    "enterEmail": "Introduza o seu email",
+    "enterPassword": "Introduza a sua palavra‑passe",
+    "alreadyHaveAccount": "Já tem conta? Entrar",
+    "needAccount": "Precisa de conta? Registar",
+    "processing": "A processar...",
+    "termsAgree": "Ao continuar, concorda com os nossos",
     "termsOfService": "Termos de Serviço",
     "privacyPolicy": "Política de Privacidade",
-    "joinTyping": "Junte-se à nossa comunidade de entusiastas da digitação",
-    "signInContinue": "Entre para continuar sua jornada de digitação"
-  ,
+    "joinTyping": "Junte‑se à nossa comunidade de entusiastas da digitação",
+    "signInContinue": "Inicie sessão para continuar a sua jornada de digitação",
     "authenticationFailed": "Falha na autenticação"
   },
   "game": {
     "modes": {
-      "title": "Modos de Jogo",
-      "words": "Palavras Únicas",
+      "title": "Modos de jogo",
+      "words": "Palavras",
       "sentences": "Frases",
       "paragraphs": "Parágrafos"
     },
@@ -151,15 +149,15 @@
     },
     "actions": {
       "startTyping": "Clique aqui para começar a digitar...",
-      "typeHere": "Digite aqui...",
-      "startNew": "Iniciar Novo Jogo",
-      "greatJob": "Ótimo trabalho! Você completou o texto."
+      "typeHere": "Escreva aqui...",
+      "startNew": "Iniciar novo jogo",
+      "greatJob": "Bom trabalho! Concluiu o texto."
     },
     "achievement": {
       "unlocked": "Conquista Desbloqueada!"
     }
     ,
-    "wordsList": ["o","a","de","e","um","para","com","em","que","ter","é","por","não","no","com","ele","como","você","fazer","em"],
+  "wordsList": ["o","a","de","e","um","para","com","em","que","ter","é","por","não","no","com","ele","como","você","fazer","em"],
     "sentences": [
       "A raposa marrom rápida pula sobre o cão preguiçoso.",
       "Nem tudo que reluz é ouro.",
@@ -175,15 +173,15 @@
     "title": "Perfil",
     "subtitle": "Gerencie sua conta e veja seu progresso",
     "setup": {
-      "title": "Complete Seu Perfil",
-      "chooseUsername": "Escolha um Nome de Usuário",
-      "placeholder": "Digite um nome de usuário (ou deixe em branco para aleatório)",
+      "title": "Complete o seu perfil",
+      "chooseUsername": "Escolha um nome de utilizador",
+      "placeholder": "Introduza um nome de utilizador (ou deixe em branco para gerar um automaticamente)",
       "buttons": {
-        "settingUp": "Configurando...",
-        "continue": "Continuar para Painel"
+        "settingUp": "A configurar...",
+        "continue": "Continuar para o painel"
       },
       "errors": {
-        "update": "Falha ao atualizar perfil. Por favor, tente novamente."
+        "update": "Falha ao atualizar o perfil. Por favor, tente novamente."
       }
     },
     "overview": "Visão Geral",
@@ -191,10 +189,10 @@
     "historyTab": "Histórico",
     "settingsTab": "Configurações",
     "errors": {
-      "load": "Falha ao carregar dados do perfil. Por favor, tente novamente.",
-      "updateUsername": "Falha ao atualizar nome de usuário. Por favor, tente novamente.",
-      "updateLeaderboard": "Falha ao atualizar configurações da classificação. Por favor, tente novamente.",
-      "deleteAccount": "Falha ao excluir conta. Por favor, tente novamente."
+      "load": "Não foi possível carregar os dados do perfil. Tente novamente mais tarde.",
+      "updateUsername": "Falha ao atualizar o nome de utilizador. Por favor, tente novamente.",
+      "updateLeaderboard": "Falha ao atualizar as configurações da classificação. Por favor, tente novamente.",
+      "deleteAccount": "Falha ao eliminar a conta. Por favor, tente novamente."
     },
     "stats": {
       "level": "Nível",
@@ -217,26 +215,26 @@
     },
     "settings": {
       "account": {
-        "title": "Configurações da Conta",
-        "profileInfo": "Informações do Perfil",
-        "username": "Nome de Usuário",
-        "saving": "Salvando...",
-        "save": "Salvar",
-        "email": "Email",
-        "emailImmutable": "O email não pode ser alterado"
+    "title": "Definições da conta",
+    "profileInfo": "Informações do perfil",
+    "username": "Nome de utilizador",
+    "saving": "A guardar...",
+    "save": "Guardar",
+    "email": "Email",
+    "emailImmutable": "O email não pode ser alterado"
       },
       "privacy": {
-        "title": "Privacidade e Segurança",
-        "showOnLeaderboard": "Mostrar meu perfil na classificação",
-        "showOnLeaderboardDesc": "Permitir que outros usuários vejam suas estatísticas de digitação"
+        "title": "Privacidade e segurança",
+        "showOnLeaderboard": "Mostrar o meu perfil nas classificações",
+        "showOnLeaderboardDesc": "Permitir que outros utilizadores vejam as suas estatísticas de digitação"
       },
       "danger": {
-        "title": "Zona de Perigo",
-        "deleteAccount": "Excluir Conta",
-        "deleteAccountDesc": "Excluir permanentemente sua conta e todos os dados associados",
-        "deleteConfirm": "Tem certeza? Esta ação não pode ser desfeita.",
-        "deleting": "Excluindo...",
-        "yesDelete": "Sim, Excluir Minha Conta",
+        "title": "Zona de risco",
+        "deleteAccount": "Eliminar conta",
+        "deleteAccountDesc": "Eliminar permanentemente a sua conta e todos os dados associados",
+        "deleteConfirm": "Tem a certeza? Esta ação não pode ser desfeita.",
+        "deleting": "A eliminar...",
+        "yesDelete": "Sim, eliminar a minha conta",
         "cancel": "Cancelar"
       }
     }
