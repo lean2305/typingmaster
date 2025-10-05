@@ -72,7 +72,7 @@ export function Dashboard() {
                     <Keyboard className="w-6 h-6 text-indigo-600" />
                   </div>
                 </div>
-                <span className="font-bold text-indigo-600">TypingMaster</span>
+                <span className="font-bold text-indigo-600">{t('common.appName')}</span>
               </Link>
               {navigation.map((item) => (
                 <Link

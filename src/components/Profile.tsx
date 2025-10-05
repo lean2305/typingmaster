@@ -59,7 +59,7 @@ export function Profile() {
 
   const fetchUserData = async () => {
     if (!user?.id) {
-      setError('User not authenticated');
+      setError(t('profile.errors.load'));
       setLoading(false);
       return;
     }

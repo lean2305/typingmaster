@@ -71,7 +71,7 @@ export function LandingPage() {
                 </div>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-indigo-600">TypingMaster</h1>
+                <h1 className="text-3xl font-bold text-indigo-600">{t('common.appName')}</h1>
                 <p className="text-sm text-indigo-400">{t('landing.hero.tagline')}</p>
               </div>
             </div>
@@ -230,7 +230,7 @@ export function LandingPage() {
                 <Sparkles className="w-10 h-10 mb-4" />
                 <h2 className="text-3xl font-bold mb-4">{t('landing.advancedFeatures.title')}</h2>
                 <p className="text-indigo-100 mb-6">
-                  TypingMaster offers a comprehensive set of features designed to help you become a typing expert.
+                  {t('landing.featuresShowcase.body')}
                 </p>
                 
                 <ul className="space-y-3">
@@ -248,7 +248,7 @@ export function LandingPage() {
               <div className="relative">
                 <img 
                   src="https://images.unsplash.com/photo-1555532538-dcdbd01d373d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                  alt="Person typing on keyboard" 
+                  alt={t('landing.images.typingAlt')}
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-indigo-600/50"></div>
@@ -294,8 +294,8 @@ export function LandingPage() {
             <Trophy className="w-5 h-5" />
             <Users className="w-5 h-5" />
           </div>
-          <p>© {new Date().getFullYear()} TypingMaster. All rights reserved.</p>
-          <p className="mt-2">{t('landing.footer.improveSkills')}</p>
+        <p>{t('landing.copyright', { year: new Date().getFullYear(), appName: t('common.appName') })}</p>
+      <p className="mt-2">{t('landing.footer.improveSkills')}</p>
         </footer>
       </div>
     </div>

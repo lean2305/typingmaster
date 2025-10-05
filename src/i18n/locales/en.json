@@ -16,8 +16,13 @@
     "leaderboard": "Leaderboard",
     "settings": "Settings",
     "and": "&"
+  ,
+    "appName": "TypingMaster"
   },
   "landing": {
+    "images": {
+      "typingAlt": "Person typing on keyboard"
+    },
     "hero": {
       "title": "Master Your Typing Skills",
       "subtitle": "Join thousands of users improving their typing speed and accuracy through our engaging and interactive platform.",
@@ -60,6 +65,7 @@
       "title": "Advanced Features"
     },
     "featuresShowcase": {
+      "body": "TypingMaster offers a comprehensive set of features designed to help you become a typing expert.",
       "powerfulTitle": "Powerful Features",
       "description": "Our platform is designed to help you improve your typing skills through engaging exercises and comprehensive analytics.",
       "list": [
@@ -70,6 +76,7 @@
         "Achievement system for motivation"
       ]
     },
+    "testimonialsTitle": "What Our Users Say",
     "benefits": [
       {
         "title": "Speed Improvement",
@@ -109,6 +116,8 @@
     "footer": {
       "improveSkills": "Improve your typing skills today!"
     }
+  ,
+    "copyright": "© {{year}} {{appName}}. All rights reserved."
   },
   "auth": {
     "welcomeBack": "Welcome Back",
@@ -123,6 +132,8 @@
     "privacyPolicy": "Privacy Policy",
     "joinTyping": "Join our community of typing enthusiasts",
     "signInContinue": "Sign in to continue your typing journey"
+  ,
+    "authenticationFailed": "Authentication failed"
   },
   "game": {
     "modes": {
@@ -165,6 +176,18 @@
   "profile": {
     "title": "Profile",
     "subtitle": "Manage your account and view your progress",
+    "setup": {
+      "title": "Complete Your Profile",
+      "chooseUsername": "Choose a Username",
+      "placeholder": "Enter username (or leave blank for random)",
+      "buttons": {
+        "settingUp": "Setting up...",
+        "continue": "Continue to Dashboard"
+      },
+      "errors": {
+        "update": "Failed to update profile. Please try again."
+      }
+    },
     "overview": "Overview",
     "achievements": "Achievements",
     "historyTab": "History",
@@ -223,7 +246,11 @@
   "leaderboard": {
     "title": "Top Players",
     "noPlayers": "No players have joined the leaderboard yet. Be the first to start typing and claim the top spot!",
-    "startTyping": "Start Typing"
+    "startTyping": "Start Typing",
+    "errors": {
+      "load": "Failed to load leaderboard data. Please try again later."
+    },
+    "tryAgain": "Try Again"
   },
   "settings": {
     "language": {

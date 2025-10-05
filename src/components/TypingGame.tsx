@@ -535,7 +535,7 @@ export function TypingGame() {
             <div className="flex">
               <Link to="/dashboard" className="flex items-center px-4">
                 <Keyboard className="w-6 h-6 text-indigo-600 mr-2" />
-                <span className="font-bold text-indigo-600">TypingMaster</span>
+                <span className="font-bold text-indigo-600">{t('common.appName')}</span>
               </Link>
               <Link
                 to="/play"

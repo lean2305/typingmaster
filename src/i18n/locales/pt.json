@@ -18,6 +18,9 @@
     "and": "e"
   },
   "landing": {
+    "images": {
+      "typingAlt": "Pessoa digitando no teclado"
+    },
     "hero": {
       "title": "Domine Suas Habilidades de Digitação",
       "subtitle": "Junte-se a milhares de usuários melhorando sua velocidade e precisão de digitação através da nossa plataforma envolvente e interativa.",
@@ -68,7 +71,8 @@
         "Acompanhamento de progresso e análises",
         "Classificações globais e competições",
         "Sistema de conquistas para motivação"
-      ]
+      ],
+      "body": "TypingMaster oferece um conjunto abrangente de recursos projetados para ajudá-lo a se tornar um especialista em digitação."
     },
     "benefits": [
       {
@@ -109,6 +113,9 @@
     "footer": {
       "improveSkills": "Melhore suas habilidades de digitação hoje!"
     }
+    ,
+    "testimonialsTitle": "O que nossos usuários dizem",
+    "copyright": "© {{year}} {{appName}}. Todos os direitos reservados."
   },
   "auth": {
     "welcomeBack": "Bem-vindo de Volta",
@@ -123,6 +130,8 @@
     "privacyPolicy": "Política de Privacidade",
     "joinTyping": "Junte-se à nossa comunidade de entusiastas da digitação",
     "signInContinue": "Entre para continuar sua jornada de digitação"
+  ,
+    "authenticationFailed": "Falha na autenticação"
   },
   "game": {
     "modes": {
@@ -165,6 +174,18 @@
   "profile": {
     "title": "Perfil",
     "subtitle": "Gerencie sua conta e veja seu progresso",
+    "setup": {
+      "title": "Complete Seu Perfil",
+      "chooseUsername": "Escolha um Nome de Usuário",
+      "placeholder": "Digite um nome de usuário (ou deixe em branco para aleatório)",
+      "buttons": {
+        "settingUp": "Configurando...",
+        "continue": "Continuar para Painel"
+      },
+      "errors": {
+        "update": "Falha ao atualizar perfil. Por favor, tente novamente."
+      }
+    },
     "overview": "Visão Geral",
     "achievements": "Conquistas",
     "historyTab": "Histórico",
@@ -223,7 +244,11 @@
   "leaderboard": {
     "title": "Melhores Jogadores",
     "noPlayers": "Nenhum jogador entrou na classificação ainda. Seja o primeiro a começar a digitar e conquiste o primeiro lugar!",
-    "startTyping": "Começar a Digitar"
+    "startTyping": "Começar a Digitar",
+    "errors": {
+      "load": "Falha ao carregar dados da classificação. Por favor, tente novamente mais tarde."
+    },
+    "tryAgain": "Tentar Novamente"
   },
   "settings": {
     "language": {

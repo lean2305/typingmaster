@@ -38,7 +38,7 @@ export function AuthForm() {
         if (error) throw error;
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Authentication failed');
+      setError(err instanceof Error ? err.message : t('auth.authenticationFailed', 'Authentication failed'));
     } finally {
       setLoading(false);
     }

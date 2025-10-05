@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
@@ -31,11 +32,13 @@ export function ProfileSetup() {
       if (updateError) throw updateError;
       navigate('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      setError(err instanceof Error ? err.message : t('profile.setup.errors.update'));
     } finally {
       setLoading(false);
     }
   };
+
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
@@ -45,30 +48,30 @@ export function ProfileSetup() {
         className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
       >
         <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          Complete Your Profile
+          {t('profile.setup.title')}
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Choose a Username
+              {t('profile.setup.chooseUsername')}
             </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-              placeholder="Enter username (or leave blank for random)"
+              placeholder={t('profile.setup.placeholder') as string}
             />
           </div>
           {error && (
-            <p className="text-red-500 text-sm">{error}</p>
+            <p className="text-red-500 text-sm">{t('profile.setup.errors.update')}</p>
           )}
           <button
             type="submit"
             disabled={loading}
             className="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50"
           >
-            {loading ? 'Setting up...' : 'Continue to Dashboard'}
+            {loading ? t('profile.setup.buttons.settingUp') : t('profile.setup.buttons.continue')}
           </button>
         </form>
       </motion.div>

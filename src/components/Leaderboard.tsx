@@ -56,7 +56,7 @@ export function Leaderboard() {
       setLeaders(validEntries);
     } catch (err) {
       console.error('Error fetching leaderboard:', err);
-      setError('Failed to load leaderboard data. Please try again later.');
+      setError(t('leaderboard.errors.load'));
     } finally {
       setLoading(false);
     }
@@ -78,7 +78,7 @@ export function Leaderboard() {
           onClick={fetchLeaderboard}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
         >
-          Try Again
+          {t('leaderboard.tryAgain')}
         </button>
       </div>
     );
